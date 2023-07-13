@@ -1,43 +1,15 @@
 <script lang="ts">
-  import { invalidateAll } from '$app/navigation';
-  import type { PageData } from './$types';
-
-  type Data = {
-    success: boolean;
-    errors: Record<string, string>;
-  };
+  import { enhance } from '$app/forms';
+    import type { SubmitFunction } from '@sveltejs/kit';
+  import type { ActionData, PageData } from './$types';
 
   export let data: PageData;
-  export let form: Data;
+  export let form: ActionData;
 
-  async function addTodo(event: Event) {
-    const formEl = event.target as HTMLFormElement;
-    const data = new FormData(formEl);
-
-    const response = await fetch(formEl.action, {
-      method: 'POST',
-      body: data
-    });
-
-    const responseData = await response.json();
-
-    form = responseData;
-
-    formEl.reset();
-
-    await invalidateAll();
-  }
-
-  async function removeTodo(event: Event) {
-    const formEl = event.target as HTMLFormElement;
-    const data = new FormData(formEl);
-
-    const response = await fetch(formEl.action, {
-      method: 'DELETE',
-      body: data
-    });
-
-    await invalidateAll();
+  const addTodo: SubmitFunction = (input) => {
+    // do something before submitting form
+    console.log(input);
+    
   }
 </script>
 
@@ -49,7 +21,7 @@
   {#each data.todos as todo}
     <li>
       <span>{todo.text}</span>
-      <form method="POST" on:submit|preventDefault={removeTodo}>
+      <form method="POST" action="?/removeTodo" use:enhance>
         <input type="hidden" name="id" value={todo.id} />
         <button type="submit">x</button>
       </form>
@@ -57,7 +29,11 @@
   {/each}
 </ul>
 
-<form method="POST" on:submit|preventDefault={addTodo}>
+<form method="POST" action="?/addTodo" use:enhance>
   <input type="text" name="todo" />
+  {#if form?.missing}
+    <span style="color: red;">This field is required</span>
+  {/if}
   <button type="submit">+ Add Todo</button>
+  <button formaction="?/clearTodos" type="submit">Clear</button>
 </form>
