@@ -1,16 +1,28 @@
 <script lang="ts">
   import { enhance } from '$app/forms';
-    import type { SubmitFunction } from '@sveltejs/kit';
+  import type { SubmitFunction } from '@sveltejs/kit';
   import type { ActionData, PageData } from './$types';
 
   export let data: PageData;
   export let form: ActionData;
 
+  let loading = false;
+
   const addTodo: SubmitFunction = (input) => {
     // do something before submitting form
-    console.log(input);
+    // console.log(input);
+    loading = true;
+
+    console.log('Before', loading);
     
-  }
+
+    return async ({ update }) => {
+      // do something after submitting form
+      loading = false;
+      console.log('After', loading);
+      await update();
+    };
+  };
 </script>
 
 <pre>
@@ -29,11 +41,11 @@
   {/each}
 </ul>
 
-<form method="POST" action="?/addTodo" use:enhance>
+<form method="POST" action="?/addTodo" use:enhance={addTodo}>
   <input type="text" name="todo" />
   {#if form?.missing}
     <span style="color: red;">This field is required</span>
   {/if}
-  <button type="submit">+ Add Todo</button>
+  <button type="submit" aria-busy={loading} disabled={loading}>{!loading ? '+ Add Todo' : 'Adding Todo...'}</button>
   <button formaction="?/clearTodos" type="submit">Clear</button>
 </form>
