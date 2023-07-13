@@ -1,26 +1,21 @@
 import { fail, type Actions, redirect } from '@sveltejs/kit';
+import { zfd } from 'zod-form-data';
 
 export const actions: Actions = {
   default: async ({ request }) => {
     const formData = await request.formData();
 
-    const user = formData.get('user');
-    const password = formData.get('password');
+    const loginSchema = zfd.formData({
+      user: zfd.text(),
+      password: zfd.text()
+    });
 
-    const errors: Record<string, unknown> = {};
+    const result = loginSchema.safeParse(formData);
 
-    if (!user || typeof user !== 'string') {
-      errors.user = 'required';
-    }
-
-    if (!password || typeof password !== 'string') {
-      errors.password = 'required';
-    }
-
-    if (Object.keys(errors).length > 0) {
+    if (!result.success) {
       const data = {
         data: Object.fromEntries(formData),
-        errors
+        errors: result.error.flatten().formErrors
       };
 
       return fail(400, data);
