@@ -15,7 +15,7 @@ export const actions: Actions = {
     if (!result.success) {
       const data = {
         data: Object.fromEntries(formData),
-        errors: result.error.flatten().formErrors
+        errors: result.error.flatten().fieldErrors
       };
 
       return fail(400, data);
