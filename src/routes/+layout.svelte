@@ -9,11 +9,5 @@
 </nav>
 <slot />
 <style>
-  ul { 
-    display: flex;
-    list-style: none;
-  }
-  ul li {
-    margin: 0 5px;
-  }
+
 </style>
