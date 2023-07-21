@@ -1,12 +1,13 @@
-/* import type { Handle } from '@sveltejs/kit';
+/* import type { Handle } from '@sveltejs/kit'; */
+// import type { HandleServerError } from '@sveltejs/kit';
 
-export const handle: Handle = async ({ event, resolve }) => { */
+import type { HandleFetch } from '@sveltejs/kit';
+
+/* export const handle: Handle = async ({ event, resolve }) => { */
 /* HOOK 1 */
 // if (event.url.pathname.startsWith('/something')) {
 //   return new Response('Something return here! :)');
 // }
-
-import type { HandleServerError } from '@sveltejs/kit';
 
 /* HOOK 2 */
 // const session = event.cookies.get('session')
@@ -41,10 +42,20 @@ import type { HandleServerError } from '@sveltejs/kit';
 //   console.log(`🚀 ${route} took ${responseTime.toFixed(2)} ms`);
 // }
 
-// return respose
+// return resolve(event);
 /* }; */
 
-export const handleError: HandleServerError = async ({ error, event }) => {
-  console.log('error', error);
-  
+// export const handleError: HandleServerError = async ({ error, event }) => {
+//   console.log('error', error);
+// };
+
+export const handleFetch: HandleFetch = ({ request, fetch }) => {
+  if (request.url.startsWith('http')) {
+    const url = request.url.replace('http', 'https');
+    request = new Request(url, request);
+
+    console.log(request.url);
+  }
+
+  return fetch(request)
 };
