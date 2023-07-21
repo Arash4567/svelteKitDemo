@@ -1,14 +1,16 @@
 <script>
-	import '@picocss/pico/css/pico.css'
+	import '@picocss/pico'
   import '../app.css'
 </script>
-<nav>
-	<ul>
-		<li><a href="/">Home</a></li>
-		<li><a href="/posts">Posts</a></li>
-	</ul>
-</nav>
-<slot />
+<main class="container">
+	<nav>
+		<ul>
+			<li><a href="/">Home</a></li>
+			<li><a href="/hookone">Hook 1</a></li>
+		</ul>
+	</nav>
+	<slot />
+</main>
 <style>
 
 </style>

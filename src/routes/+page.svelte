@@ -1,9 +1,7 @@
 <script lang="ts">
-	let count: number = 0;
-
-	const counter = () => count++;
+  import { page } from '$app/stores';
 </script>
 
-<h1>Welcome to SvelteKit</h1>
-<p>Count: {count}</p>
-<button on:click={counter}>Count</button>
+{#if $page.data.user}
+  <h1>Welcome {$page.data.user}</h1>
+{/if}
