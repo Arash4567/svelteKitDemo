@@ -6,4 +6,5 @@ function sleep(ms: number) {
 
 export const load: PageServerLoad = async () => {
   // await sleep(2000);
+  // throw new Error('banana 🍌') 
 };
