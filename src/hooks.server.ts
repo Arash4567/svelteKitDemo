@@ -1,7 +1,8 @@
-/* import type { Handle } from '@sveltejs/kit'; */
+import type { Handle } from '@sveltejs/kit';
+import { parseFormData } from 'parse-nested-form-data';
 // import type { HandleServerError } from '@sveltejs/kit';
 
-import type { HandleFetch } from '@sveltejs/kit';
+// import type { HandleFetch } from '@sveltejs/kit';
 
 /* export const handle: Handle = async ({ event, resolve }) => { */
 /* HOOK 1 */
@@ -49,13 +50,24 @@ import type { HandleFetch } from '@sveltejs/kit';
 //   console.log('error', error);
 // };
 
-export const handleFetch: HandleFetch = ({ request, fetch }) => {
-  if (request.url.startsWith('http')) {
-    const url = request.url.replace('http', 'https');
-    request = new Request(url, request);
+/* HOOK 5 */
+// export const handleFetch: HandleFetch = ({ request, fetch }) => {
+//   if (request.url.startsWith('http')) {
+//     const url = request.url.replace('http', 'https');
+//     request = new Request(url, request);
 
-    console.log(request.url);
+//     console.log(request.url);
+//   }
+
+//   return fetch(request)
+// };
+
+export const handle: Handle = async ({ event, resolve }) => {
+  if (event.request.method === 'POST') {
+    const formData = await event.request.formData();
+    const data = parseFormData(formData);
+
+    event.locals.formData = data;
   }
-
-  return fetch(request)
+  return resolve(event);
 };
