@@ -1,10 +1,11 @@
-import type { Handle } from '@sveltejs/kit';
+import type { Handle, HandleFetch } from '@sveltejs/kit';
+import { sequence } from '@sveltejs/kit/hooks';
 import { parseFormData } from 'parse-nested-form-data';
 // import type { HandleServerError } from '@sveltejs/kit';
 
 // import type { HandleFetch } from '@sveltejs/kit';
 
-/* export const handle: Handle = async ({ event, resolve }) => { */
+/* export const auth: Handle = async ({ event, resolve }) => { */
 /* HOOK 1 */
 // if (event.url.pathname.startsWith('/something')) {
 //   return new Response('Something return here! :)');
@@ -62,7 +63,15 @@ import { parseFormData } from 'parse-nested-form-data';
 //   return fetch(request)
 // };
 
-export const handle: Handle = async ({ event, resolve }) => {
+const auth: Handle = async ({ event, resolve }) => {
+  console.log("Auth Hook");
+  
+  return resolve(event)
+}
+
+const handleForm: Handle = async ({ event, resolve }) => {
+  console.log("FormData Hook");
+  
   if (event.request.method === 'POST') {
     const formData = await event.request.formData();
     const data = parseFormData(formData);
@@ -71,3 +80,5 @@ export const handle: Handle = async ({ event, resolve }) => {
   }
   return resolve(event);
 };
+
+export const handle = sequence(auth, handleForm)

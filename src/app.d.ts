@@ -4,6 +4,7 @@ declare global {
 	namespace App {
 		// interface Error {}
 		interface Locals {
+			user: string,
 			formData: Record<string, unknown>
 		}
 		// interface PageData {}
